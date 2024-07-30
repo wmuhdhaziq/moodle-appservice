@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "staging" ]
+    
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: azure/docker-login@v2
+      with:
+          login-server: moodleapp.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+    
+    - run: |
+          docker build -t moodleapp.azurecr.io/moodle-appservice:stage .
+          docker push moodleapp.azurecr.io/moodle-appservice
